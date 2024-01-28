@@ -75,10 +75,29 @@ button:hover {
     <script src="./emails.js"></script>
 
 <script>
-    // ... (existing script)
+    const dateInput = document.getElementById("date");
+const timeInput = document.getElementById("time");
+const bookAppointmentButton = document.getElementById("book-appointment");
 
-    bookAppointmentButton.addEventListener("click", function () {
-        // ... (existing code)
+function isValidTime(selectedDate, selectedTime) {
+    const dayOfWeek = selectedDate.getDay();
+    const hours = selectedTime.getHours();
+
+    // Monday to Friday (0 = Sunday, 6 = Saturday)
+    if (dayOfWeek >= 1 && dayOfWeek <= 5) {
+        return hours >= 8 && hours <= 16;
+    }
+    // Saturday
+    else if (dayOfWeek === 6) {
+        return hours >= 9 && hours <= 12;
+    }
+    return false;
+}
+
+bookAppointmentButton.addEventListener("click", function () {
+    const selectedDate = new Date(dateInput.value);
+    const selectedTime = new Date(`1970-01-01T${timeInput.value}`);
+    const currentDate = new Date();
 
         if (selectedDate < currentDate || (selectedDate.toDateString() === currentDate.toDateString() && selectedTime <= currentDate)) {
             alert("Please select a date and time in the future.");
