@@ -1,61 +1,122 @@
-<!-- index.html -->
-
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Email Sender</title>
-  <style>
-    body {
-      font-family: Arial, sans-serif;
-    }
-    textarea {
-      width: 100%;
-      height: 100px;
-    }
-  </style>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Appointment Booking</title>
+    <style>
+        body {
+    font-family: Arial, sans-serif;
+}
+
+.container {
+    max-width: 400px;
+    margin: 0 auto;
+    padding: 20px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    background-color: #f9f9f9;
+    text-align: center;
+}
+
+h1 {
+    color: #333;
+}
+
+form {
+    margin: 20px 0;
+}
+
+label {
+    display: block;
+    margin-bottom: 5px;
+}
+
+input[type="date"],
+input[type="time"],
+input[type="email"] {
+    width: 100%;
+    padding: 10px;
+    margin-bottom: 10px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+}
+
+button {
+    width: 100%;
+    padding: 10px;
+    background-color: #007BFF;
+    color: #fff;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+}
+
+button:hover {
+    background-color: #0056b3;
+}
+
+    </style>
 </head>
 <body>
-  <h2>Email Sender</h2>
-  <form id="emailForm">
-    <label for="subject">Subject:</label>
-    <input type="text" id="subject" required><br>
-    
-    <label for="message">Message:</label>
-    <textarea id="message" required></textarea><br>
-    
-    <label for="emails">Friend's Emails:</label>
-    <!-- Display friends' emails from the imported JS file -->
-    <input type="text" id="emails" required><br>
-    
-    <button type="button" onclick="sendEmails()">Send Emails</button>
-  </form>
+    <div class="container">
+        <h1>Book an Appointment</h1>
+        <form id="appointment-form">
+            <label for="date">Select Date:</label>
+            <input type="date" id="date" required>
+            
+            <label for="time">Select Time:</label>
+            <input type="time" id="time" required>
+            
+            <button type="button" id="book-appointment">Book Appointment</button>
+        </form>
+    </div>
 
-  <script type="module">
-    // Import the exported array from the friendsList.js file
-    import { friendsEmails } from './friendsList.js';
+    <script src="emails.js"></script>
 
-    function updateEmailInput() {
-      // Update the input field with the emails from the imported JS file
-      document.getElementById('emails').value = friendsEmails.join(', ');
+<script>
+    // ... (existing script)
+
+    bookAppointmentButton.addEventListener("click", function () {
+        // ... (existing code)
+
+        if (selectedDate < currentDate || (selectedDate.toDateString() === currentDate.toDateString() && selectedTime <= currentDate)) {
+            alert("Please select a date and time in the future.");
+        } else if (!isValidTime(selectedDate, selectedTime)) {
+            alert("Please select a valid time:\nMonday to Friday (8 AM to 5 PM)\nSaturday (9 AM to 1 PM)");
+        } else {
+            const formattedDate = `${selectedDate.getFullYear()}-${(selectedDate.getMonth() + 1).toString().padStart(2, '0')}-${selectedDate.getDate().toString().padStart(2, '0')}`;
+            const formattedTime = `${selectedTime.getHours().toString().padStart(2, '0')}:${selectedTime.getMinutes().toString().padStart(2, '0')}`;
+
+            // Retrieve the list of emails from the external file (emails.js)
+            const emailList = getEmailList(); // Assuming there is a function getEmailList() in emails.js
+
+            // Create a mailto link with multiple recipients
+            const mailtoLink = `mailto:${emailList.join(',')}?subject=Book%20my%20appointment on&body=Date:${formattedDate}%0A%0ATime:${formattedTime}`;
+
+            window.location.href = mailtoLink;
+        }
+    });
+    
+// Disable past dates in the date input and Sundays (day 0)
+const today = new Date().toISOString().split("T")[0];
+dateInput.min = today;
+dateInput.addEventListener("input", function () {
+    const selectedDate = new Date(dateInput.value);
+    const currentDate = new Date();
+
+    if (selectedDate.toDateString() === currentDate.toDateString()) {
+        const currentTime = `${currentDate.getHours()}:${(currentDate.getMinutes() < 10 ? '0' : '') + currentDate.getMinutes()}`;
+        timeInput.min = currentTime;
+    } else {
+        timeInput.min = "00:00";
     }
 
-    // Call the function to update the input field
-    updateEmailInput();
-    
-    function sendEmails() {
-      const subject = document.getElementById('subject').value;
-      const message = document.getElementById('message').value;
-      const emails = friendsEmails;
-
-      // Use the emails from the imported JS file
-      emails.forEach(email => {
-        console.log(`Subject: ${subject}\nTo: ${email.trim()}\nMessage: ${message}\n`);
-      });
-
-      alert('Emails sent successfully.');
+    if (selectedDate.getDay() === 0) {
+        alert("Please select a date other than Sunday.");
+        dateInput.value = ''; // Clear the selected date
     }
-  </script>
+});
+    </script>
 </body>
 </html>
