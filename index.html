@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Email Sender</title>
+</head>
+<body>
+  <h1>Email Sender</h1>
+  
+  <form id="emailForm">
+    <label for="subject">Subject:</label>
+    <input type="text" id="subject" name="subject" required><br>
+
+    <label for="message">Message:</label><br>
+    <textarea id="message" name="message" rows="4" cols="50" required></textarea><br>
+
+    <button type="button" onclick="sendEmails()">Send Emails</button>
+  </form>
+
+  <script>
+    function sendEmails() {
+      const subject = document.getElementById('subject').value;
+      const message = document.getElementById('message').value;
+
+      // Replace the emailList array with your friends' email addresses
+      const emailList = ['prateekkumarshukla10@gmail.com', 'prateekkumar5348@gmail.com'];
+
+      emailList.forEach(email => {
+        // Use a server-side script to send emails
+        // Example: You can use Node.js with Nodemailer or PHP with mail() function
+        // This is a simplified example, and you need to implement server-side logic separately.
+        console.log(`Sending email to ${email} with subject: ${subject} and message: ${message}`);
+        // Implement the server-side email sending logic here
+      });
+
+      // Optionally, you can display a confirmation message
+      alert('Emails sent successfully!');
+    }
+  </script>
+</body>
+</html>
