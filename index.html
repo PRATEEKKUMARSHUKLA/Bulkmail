@@ -1,23 +1,61 @@
+<!-- index.html -->
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Email Sender</title>
-  <script src="./script.js"></script>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+    }
+    textarea {
+      width: 100%;
+      height: 100px;
+    }
+  </style>
 </head>
 <body>
-  <form action="/sendEmail" method="post">
+  <h2>Email Sender</h2>
+  <form id="emailForm">
     <label for="subject">Subject:</label>
-    <input type="text" id="subject" name="subject" required><br>
-
-    <label for="text">Compose Email:</label>
-    <textarea id="text" name="text" required></textarea><br>
-
-    <label for="emails">Emails (comma-separated):</label>
-    <input type="text" id="emails" name="emails" required><br>
-
-    <button type="submit">Send Email</button>
+    <input type="text" id="subject" required><br>
+    
+    <label for="message">Message:</label>
+    <textarea id="message" required></textarea><br>
+    
+    <label for="emails">Friend's Emails:</label>
+    <!-- Display friends' emails from the imported JS file -->
+    <input type="text" id="emails" required><br>
+    
+    <button type="button" onclick="sendEmails()">Send Emails</button>
   </form>
+
+  <script type="module">
+    // Import the exported array from the friendsList.js file
+    import { friendsEmails } from './friendsList.js';
+
+    function updateEmailInput() {
+      // Update the input field with the emails from the imported JS file
+      document.getElementById('emails').value = friendsEmails.join(', ');
+    }
+
+    // Call the function to update the input field
+    updateEmailInput();
+    
+    function sendEmails() {
+      const subject = document.getElementById('subject').value;
+      const message = document.getElementById('message').value;
+      const emails = friendsEmails;
+
+      // Use the emails from the imported JS file
+      emails.forEach(email => {
+        console.log(`Subject: ${subject}\nTo: ${email.trim()}\nMessage: ${message}\n`);
+      });
+
+      alert('Emails sent successfully.');
+    }
+  </script>
 </body>
 </html>
